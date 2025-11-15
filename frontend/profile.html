@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body onload="loadProfile(); protect();">
+
+<div class="navbar">
+  <a href="index.html">Home</a>
+  <a href="ask.html">Ask</a>
+  <a href="questions.html">Questions</a>
+  <a href="leaderboard.html">Leaderboard</a>
+  <a href="profile.html">Profile</a>
+  <a href="#" onclick="logout()">Logout</a>
+</div>
+
+<div class="container">
+  <h2>Your Profile</h2>
+
+  <p><b>Username:</b> <span id="uname"></span></p>
+  <p><b>Points:</b> <span id="points"></span></p>
+
+  <h3>Your Questions</h3>
+  <div id="qList"></div>
+
+  <h3>Your Answers</h3>
+  <div id="aList"></div>
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+
+<script>
+async function loadProfile() {
+  let username = localStorage.getItem("user");
+
+  const res = await fetch(API + "/profile/" + username);
+  const data = await res.json();
+
+  document.getElementById("uname").innerText = data.username;
+  document.getElementById("points").innerText = data.points;
+
+  let qhtml = "";
+  data.questions.forEach(q => {
+    qhtml += `<p>${q.question}</p>`;
+  });
+
+  document.getElementById("qList").innerHTML = qhtml;
+
+  let ahtml = "";
+  data.answers.forEach(a => {
+    ahtml += `<p>${a.answer}</p>`;
+  });
+
+  document.getElementById("aList").innerHTML = ahtml;
+}
+</script>
+
+</body>
+</html>

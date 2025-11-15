@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h2 id="welcome"></h2>
+
+  <button onclick="logout()">Logout</button>
+</div>
+
+<script>
+if (!localStorage.getItem("user")) {
+  window.location.href = "login.html";
+}
+
+document.getElementById("welcome").innerText =
+  "Welcome " + localStorage.getItem("user");
+
+function logout() {
+  localStorage.removeItem("user");
+  window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

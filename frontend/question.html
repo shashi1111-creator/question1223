@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Question</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body onload="loadQuestion(); protect();">
+
+<div class="navbar">
+  <a href="index.html">Home</a>
+  <a href="ask.html">Ask</a>
+  <a href="questions.html">Questions</a>
+  <a href="leaderboard.html">Leaderboard</a>
+  <a href="profile.html">Profile</a>
+  <a href="#" onclick="logout()">Logout</a>
+</div>
+
+<div class="container">
+  <h2 id="ques"></h2>
+
+  <button onclick="upvote()">Upvote</button>
+
+  <h3>Answers</h3>
+  <div id="ansList"></div>
+
+  <h3>Add Answer</h3>
+  <textarea id="answer"></textarea>
+  <button onclick="addAnswer()">Submit</button>
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+
+<script>
+const qid = new URLSearchParams(window.location.search).get("id");
+
+async function loadQuestion() {
+  const res = await fetch(API + "/questions");
+  const data = await res.json();
+
+  let q = data.find(x => x.id === qid);
+  document.getElementById("ques").innerText = q.question;
+
+  loadAnswers();
+}
+
+async function loadAnswers() {
+  const res = await fetch(API + "/answers/" + qid);
+  const data = await res.json();
+
+  let html = "";
+  data.forEach(a => {
+    html += `<div class="answer-box">${a.answer} - <b>${a.username}</b></div>`;
+  });
+
+  document.getElementById("ansList").innerHTML = html;
+}
+
+async function addAnswer() {
+  let answer = document.getElementById("answer").value;
+  let username = localStorage.getItem("user");
+
+  await fetch(API + "/add-answer", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({username, questionId: qid, answer})
+  });
+
+  loadAnswers();
+}
+
+async function upvote() {
+  await fetch(API + "/upvote", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({questionId: qid})
+  });
+
+  alert("Upvoted!");
+}
+</script>
+
+</body>
+</html>

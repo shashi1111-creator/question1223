@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaderboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body onload="loadLeaderboard(); protect();">
+
+<div class="navbar">
+  <a href="index.html">Home</a>
+  <a href="ask.html">Ask</a>
+  <a href="questions.html">Questions</a>
+  <a href="leaderboard.html">Leaderboard</a>
+  <a href="profile.html">Profile</a>
+  <a href="#" onclick="logout()">Logout</a>
+</div>
+
+<div class="container">
+  <h2>Leaderboard</h2>
+
+  <div id="list"></div>
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+
+<script>
+async function loadLeaderboard() {
+  const res = await fetch(API + "/users");
+  const users = await res.json();
+
+  users.sort((a,b) => b.points - a.points);
+
+  let html = "";
+
+  users.forEach(u => {
+    html += `<p><b>${u.username}</b> - ${u.points} points</p>`;
+  });
+
+  document.getElementById("list").innerHTML = html;
+}
+</script>
+
+</body>
+</html>

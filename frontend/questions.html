@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>All Questions</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body onload="loadQuestions(); protect();">
+
+<div class="navbar">
+  <a href="index.html">Home</a>
+  <a href="ask.html">Ask</a>
+  <a href="questions.html">Questions</a>
+  <a href="leaderboard.html">Leaderboard</a>
+  <a href="profile.html">Profile</a>
+  <a href="#" onclick="logout()">Logout</a>
+</div>
+
+<div class="container">
+  <h2>All Questions</h2>
+
+  <div id="list"></div>
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+
+<script>
+async function loadQuestions() {
+  const res = await fetch(API + "/questions");
+  const data = await res.json();
+
+  let html = "";
+  data.forEach(q => {
+    html += `
+      <div class="question-card">
+        <h3>${q.question}</h3>
+        <p>By: ${q.username}</p>
+        <p>Votes: ${q.votes}</p>
+        <a href="question.html?id=${q.id}">View Question</a>
+      </div>
+    `;
+  });
+
+  document.getElementById("list").innerHTML = html;
+}
+</script>
+
+</body>
+</html>
